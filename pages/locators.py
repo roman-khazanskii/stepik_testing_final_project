@@ -16,3 +16,5 @@ class ProductPageLocators():
     # holy smokes this is ugly
     ADDED_PRODUCT_NAME = (By.CSS_SELECTOR, "div#messages > div:nth-child(1) > div > strong")
     BASKET_TOTAL_PRICE = (By.CSS_SELECTOR, "div#messages > div:nth-child(3) > div > p > strong")
+    
+    SUCCESS_MESSAGE = (By.CSS_SELECTOR, ".alert-success")
