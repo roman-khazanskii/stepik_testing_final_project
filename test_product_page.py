@@ -2,6 +2,40 @@ from .pages.product_page import ProductPage
 from .pages.login_page import LoginPage
 from .pages.basket_page import BasketPage
 import pytest
+import time
+
+@pytest.mark.registered_user
+class TestUserAddToBasketFromProductPage:
+
+    @pytest.fixture(scope="function", autouse=True)
+    def setup(self, browser):
+        # открыть страницу регистрации
+        link = "http://selenium1py.pythonanywhere.com/accounts/login/"
+        page = LoginPage(browser, link)   
+        page.open()
+        # зарегистрировать нового пользователя
+        email: str = str(time.time()) + "@fakemail.org"
+        password = "7NZ25eE267Z2BmK"        
+        page.register_new_user(email, password)
+        # проверить, что пользователь залогинен
+        page.should_be_authorized_user()
+    
+    def test_user_cant_see_success_message(self, browser): 
+        # Открываем страницу товара 
+        link = "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/"
+        page = ProductPage(browser, link)   
+        page.open()                      
+        # Проверяем, что нет сообщения об успехе с помощью is_not_element_present
+        page.check_success_message_not_present()
+        
+    def test_user_can_add_product_to_basket(self, browser):
+        link = "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/"
+        # инициализируем Page Object, передаем в конструктор экземпляр драйвера и url адрес 
+        page = ProductPage(browser, link)   
+        # открываем страницу
+        page.open()                      
+        # пытаемся добавить товар в корзину
+        page.add_to_basket()       
 
 @pytest.mark.skip(reason="Too long")
 @pytest.mark.parametrize('link', ["http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer0",
@@ -14,7 +48,7 @@ import pytest
                                   pytest.param("http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer7", marks=pytest.mark.xfail),
                                   "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer8",
                                   "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer9"])
-def test_guest_can_add_product_to_basket(browser, link):
+def test_guest_can_add_product_to_basket_promo(browser, link):
     # link = "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=newYear2019."
     # инициализируем Page Object, передаем в конструктор экземпляр драйвера и url адрес 
     page = ProductPage(browser, link)   
@@ -22,6 +56,15 @@ def test_guest_can_add_product_to_basket(browser, link):
     page.open()                      
     # пытаемся добавить товар в корзину
     page.add_to_basket_promo()       
+    
+def test_guest_can_add_product_to_basket_promo(browser, link):
+    link = "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/"
+    # инициализируем Page Object, передаем в конструктор экземпляр драйвера и url адрес 
+    page = ProductPage(browser, link)   
+    # открываем страницу
+    page.open()                      
+    # пытаемся добавить товар в корзину
+    page.add_to_basket()
     
 def test_guest_should_see_login_link_on_product_page(browser):
     link = "http://selenium1py.pythonanywhere.com/en-gb/catalogue/the-city-and-the-stars_95/"
