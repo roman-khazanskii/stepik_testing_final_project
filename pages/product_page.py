@@ -7,13 +7,8 @@ import math
 import time
 
 class ProductPage(BasePage):
+
     def add_to_basket(self):
-        
-        expected_product_name = self.browser.find_element(*ProductPageLocators.PRODUCT_NAME).text
-        expected_product_price = self.browser.find_element(*ProductPageLocators.PRODUCT_PRICE).text
-        
-        print(f"Exp Name = {expected_product_name}, exp price = {expected_product_price}")
-        
         btn = self.browser.find_element(*ProductPageLocators.ADD_TO_BASKET_BTN)
         btn.click()
         
@@ -29,11 +24,8 @@ class ProductPage(BasePage):
         
         expected_product_name = self.browser.find_element(*ProductPageLocators.PRODUCT_NAME).text
         expected_product_price = self.browser.find_element(*ProductPageLocators.PRODUCT_PRICE).text
-        
-        print(f"Exp Name = {expected_product_name}, exp price = {expected_product_price}")
-        
-        btn = self.browser.find_element(*ProductPageLocators.ADD_TO_BASKET_BTN)
-        btn.click()
+                
+        self.add_to_basket()
         
         # получаем код, которым доказываем, что мы не человек
         self.solve_quiz_and_get_code()
